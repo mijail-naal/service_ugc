@@ -1,3 +1,8 @@
+  
+--------
+#  <center>Clickhouse - Vertica</center>
+<br>
+
 # Clickhouse
 
 ### Clickhouse insert results:
@@ -32,6 +37,9 @@ Total rows               |Query                     | Execution time
 1                        | count                    | 0.012903690338134766
 
 
+<br><br>
+--------
+#  <center>PostgreSQL - MongoDB</center>
 <br>
 
 # PostgreSQL
@@ -50,3 +58,19 @@ Total rows               |Query                     | Execution time
 1                        | count                    | 0.01564192771911621
 
 
+<br>
+
+# MongoDB
+
+### Mongo insert results:
+
+Total rows               |Batch                     | Average per insert       | Total execution time
+-------------------------|--------------------------|--------------------------|----------------------
+100000                   | 10000                    | 2.294903039932251e-05    | 2.294903039932251
+
+
+### Mongo read results:
+
+Total rows               |Batch                     | Execution time
+-------------------------|--------------------------|----------------------
+100000                   | 10000                    | 0.03533673286437988
