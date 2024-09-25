@@ -12,7 +12,7 @@ logger = logging.getLogger('src')
 
 fh = RotatingFileHandler(
     os.path.join(logs_dir, 'src.log'),
-    maxBytes=20_000_000,
+    maxBytes=20000000,  # 20_000_000
     backupCount=5
 )
 

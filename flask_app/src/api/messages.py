@@ -9,8 +9,8 @@ from src.schemas.message import SendMessage
 def abort_if_message_not_sent(args):
     abort(
         400,
-        msg=f"The message to topic '{args['topic']}' was not sent. "
-            "Check the log file for more information"
+        msg=f'The message to topic "{args["topic"]}" was not sent. '
+        'Check the log file for more information'
     )
 
 
@@ -28,11 +28,15 @@ class Message(Resource):
 
     @jwt_required()
     def post(self):
-        """
+        r"""Post method to send a topic message.
+
         Required arguments:
             topic: string, name of topic.
             key: string, user id or name, obtained from access token.
             value: string, message containing information about the event.
+
+        Returns:
+            Response
 
         Usage example with CURL:
             curl ^
@@ -41,7 +45,6 @@ class Message(Resource):
             -X POST http://localhost:5000/api/message -v ^
             -d "{\"topic\":\"<name>\",\"value\":\"<some_message>\"}"
         """
-
         current_user = get_jwt_identity()
         args = parser.parse_args()
         args['key'] = current_user
