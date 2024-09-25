@@ -28,6 +28,23 @@ class DataGenerator:
             yield data
 
 
+class MongoDataGenerator:
+    def generate_data(self, rows: int) -> list[dict[str, object]]:
+        return [
+            {'user_id': str(uuid4()), 'movie_id': str(uuid4()), 'viewed_frame': randint(100000000, 1000000000)}
+            for _ in range(rows)
+        ]
+
+    def add_data(self, total: int, size: int):
+        times = total // size + 1
+        if total % size == 0:
+            times = total // size
+
+        for _ in range(times):
+            data = self.generate_data(size)
+            yield data
+
+
 if __name__ == '__main__':
     PSQL_INSERT = 'INSERT INTO %s (user_id, movie_id, viewed_frame) VALUES '
 
@@ -35,10 +52,10 @@ if __name__ == '__main__':
 
     # Section to check the returned data
 
-    for i in dg.add_data(10, 2, PSQL_INSERT, 'views'):
+    for d in dg.add_data(10, 2, PSQL_INSERT, 'views'):
         # Testing generate_data()
-        print(i)
+        print(d)
 
-    for i in dg.add_data(10, 2, PSQL_INSERT, 'views', only_values=True):
+    for v in dg.add_data(10, 2, PSQL_INSERT, 'views', only_values=True):
         # Testing generate_values()
-        print(i)
+        print(v)
