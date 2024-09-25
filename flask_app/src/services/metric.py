@@ -1,8 +1,7 @@
 from kafka import KafkaAdminClient, KafkaProducer
 from kafka.admin import NewTopic
 from kafka.errors import NoBrokersAvailable, TopicAlreadyExistsError, \
-                         InvalidTopicError, KafkaTimeoutError, \
-                         UnknownTopicOrPartitionError
+    InvalidTopicError, KafkaTimeoutError, UnknownTopicOrPartitionError
 
 from src.utils.abstract import BaseBrokerService
 from src.utils.logger import logger
