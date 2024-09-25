@@ -1,11 +1,15 @@
 import os
 
 from flask import Flask
+from pymongo import MongoClient
 
-from .api import app_api, api
-from .api.topics import Topic
-from .api.messages import Message
+from .api.v1.topics import Topic
+from .api.v1.messages import Message
 from .services.metric import KafkaService
+from .api.v1.likes import Like
+from .api.v1.bookmarks import Bookmark
+from .api.v1.reviews import Review
+from .services.storage import MongoStorage
 from .core.config import settings
 
 
@@ -43,12 +47,19 @@ def create_app(test_config=None):
     from flask_jwt_extended import JWTManager
     # Initialize a JWTManager with this flask application.
     jwt = JWTManager(app)
-    kafka_service = KafkaService()
 
+    from .api.v1 import app_api, api
     app.register_blueprint(app_api)
 
+    kafka_service = KafkaService()
     api.add_resource(Topic, '/api/create-topic', resource_class_kwargs={'kafka_service': kafka_service})
     api.add_resource(Message, '/api/message', resource_class_kwargs={'kafka_service': kafka_service})
+    
+    client = MongoClient(settings.mongo_host, settings.mongo_port)
+    mongo_storage = MongoStorage(client)
+    api.add_resource(Like, '/api/like', resource_class_kwargs={'mongo_storage': mongo_storage})
+    api.add_resource(Bookmark, '/api/bookmark', resource_class_kwargs={'mongo_storage': mongo_storage})
+    api.add_resource(Review, '/api/review', resource_class_kwargs={'mongo_storage': mongo_storage})
 
     # Page for work testing
     @app.route('/working')
