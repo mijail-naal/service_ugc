@@ -1,7 +1,7 @@
 from kafka import KafkaConsumer
 from kafka.structs import TopicPartition
 from kafka.errors import NoBrokersAvailable, TopicAlreadyExistsError, \
-                         InvalidTopicError, KafkaTimeoutError
+    InvalidTopicError, KafkaTimeoutError
 
 from utils.logger import logger
 
