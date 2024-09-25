@@ -15,7 +15,7 @@ class PostgresStorage(AbstractStorage):
         self.cursor = cursor
         self.generator = generator
 
-    def _execute_query(self, query: str) -> int:
+    def _execute_query(self, query: str) -> float:
         start = time()
         self.cursor.execute(query)
         end = time()
@@ -34,7 +34,7 @@ class PostgresStorage(AbstractStorage):
         query = f'DROP TABLE {name};'
         self._execute_and_commit(query)
 
-    def add(self, query: str, table: str, total: int, batch: int) -> int:
+    def add(self, query: str, table: str, total: int, batch: int) -> float:
         start = time()
         for q in self.generator.add_data(total, batch, query, table):
             self.cursor.execute(q)
@@ -42,7 +42,7 @@ class PostgresStorage(AbstractStorage):
         end = time()
         return end - start
 
-    def read(self, query: str, table: str) -> int:
+    def read(self, query: str, table: str) -> float:
         query = query % table
         result = self._execute_query(query)
         return result
