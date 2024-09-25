@@ -37,5 +37,6 @@ def auth(client):
 
 
 # RUN:
-# cd flask_tuto
+# cd flask_app
 # python -m pytest
+# python -m pytest tests/test_likes.py
