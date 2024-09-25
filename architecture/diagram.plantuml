@@ -1,0 +1,89 @@
+@startuml Admin
+!include <logos/django>
+!include <logos/postgresql>
+!include <logos/nginx>
+!include <logos/elasticsearch>
+!include <logos/redis>
+!include <logos/python>
+!include <logos/flask>
+!include <logos/kafka>
+
+skinparam rectangle {
+borderColor Green
+}
+
+skinparam actor {
+Style awesome
+backgroundColor #23a3dd
+}
+
+skinparam component {
+backgroundColor<<fastapi>> #23a3dd
+}
+
+actor "Admin" as admin
+
+'--------------- Auth Service ---------------'
+rectangle "Auth Service" as auth {
+[<$nginx>] as nginx_auth
+[<size:28>**Fastapi**</size>] as fastapi_auth
+database "<$postgresql>" as postgres_auth
+
+nginx_auth -r-> fastapi_auth
+fastapi_auth -r-> postgres_auth
+}
+
+actor "User" as user
+
+'--------------- Admin Panel ---------------'
+rectangle "Admin Panel" as panel {
+[<$nginx>] as nginx_panel
+[<$django>] as django_panel
+database "<$postgresql>" as postgres_panel
+
+admin --> nginx_panel
+nginx_panel -r-> django_panel
+django_panel --> postgres_panel
+django_panel <-u-> nginx_auth
+}
+
+'--------------- Content Service ---------------'
+rectangle "Content Service" as content {
+[<$nginx>] as nginx_content
+[<size:28>**Fastapi**</size>] as fastapi_content
+[<$redis>] as redis_content
+rectangle "No / Yes" as cache
+database "<$elasticsearch>" as elastic_content
+
+user --> nginx_content
+nginx_content -r-> fastapi_content
+fastapi_content --> cache : "Check for cache"
+fastapi_content <-u-> nginx_auth
+cache -r-> redis_content
+cache -l-> elastic_content
+}
+
+'--------------- ETL ---------------'
+rectangle "ETL" {
+[<$python>] as etl
+}
+
+postgres_panel --> etl
+etl -u-> elastic_content
+
+'--------------- UGC ---------------'
+rectangle "UGC" as ugc {
+rectangle "Event" as event
+[<$flask>] as flask_ugc
+rectangle "Token" as token
+[<$kafka>] as kafka_ugc
+rectangle "ETL" as etl2
+database "<size:15>**Clickhouse**</size>" as clickhouse
+
+event --> flask_ugc
+flask_ugc <-r-> token
+flask_ugc --> kafka_ugc
+kafka_ugc -d-> etl2
+etl2 -> clickhouse
+} 
+@enduml

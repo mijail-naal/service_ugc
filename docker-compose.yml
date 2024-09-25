@@ -1,0 +1,32 @@
+services:
+  ugc:
+    container_name: "ugc"
+    build: ./flask_app
+    env_file:
+      - ./flask_app/src/.env
+    expose:
+      - 5000
+    ports:
+      - ${UGC_PORTS}
+    networks:
+      - ugc_service_network
+
+  ugc_etl:
+    container_name: "ugc_etl"
+    build: ./etl
+    env_file:
+      - ./etl/.env
+    depends_on:
+      kafka-0:
+        condition: service_completed_successfully
+      kafka-1:
+        condition: service_completed_successfully
+      kafka-2:
+        condition: service_completed_successfully
+    networks:
+      - ugc_service_network
+
+
+include:
+  - kafka/docker-compose.yml
+  - clickhouse/docker-compose.yml
