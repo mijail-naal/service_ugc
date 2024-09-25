@@ -1,11 +1,12 @@
 from random import choice, choices
+from time import sleep
 
 from kafka import KafkaProducer, KafkaAdminClient
 from kafka.admin import NewTopic
 from kafka.errors import TopicAlreadyExistsError
-from time import sleep
 
 from settings import kafka_settings
+from utils.logger import logger
 
 
 admin = KafkaAdminClient(
@@ -23,17 +24,17 @@ new_topic = NewTopic(
 try:
     admin.create_topics([new_topic])
 except (TopicAlreadyExistsError) as e:
-    pass
+    logger.info(f'Topic already exists. Exception: {type(e).__name__}')
 finally:
     admin.close()
 
 
 producer = KafkaProducer(bootstrap_servers=[kafka_settings.bootstrap_servers])
 
-user = ['user_123', 'user_125', 'user_127']
+users = ['user_123', 'user_125', 'user_127']
 action = ['CLICK', 'VIEW', 'PAGE', 'CUSTOM']
 
-rc = choices(user, k=10)
+rc = choices(users, k=10)
 
 for user in rc:
     string = f'{choice(action)}-video catalogue section-00:53:24-00:53:24-00:53:25'
@@ -45,9 +46,9 @@ for user in rc:
         partition=2
     )
     sleep(1)
-    print('sleeping')
+    logger.info('sending a message')
 
-print('messages sent ...')
+logger.info('messages sent ...')
 sleep(2)
 
 producer.close()

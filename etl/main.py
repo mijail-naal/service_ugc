@@ -52,7 +52,7 @@ if __name__ == '__main__':
         logger.info(res)
         res = loader.load(database, settings.table, EVENT_COLUMNS, messages)
         logger.info(res)
-        # loader.drop_table('kino.events')
+        loader.drop_table('kino.events')
         loader.close()
 
     kafka_extractor.stop()
