@@ -16,7 +16,7 @@ class VerticaStorage(AbstractStorage):
         self.cursor = cursor
         self.generator = generator
 
-    def _execute_query(self, query: str) -> int:
+    def _execute_query(self, query: str) -> float:
         start = time()
         self.cursor.execute(query)
         self.conn.commit()
@@ -32,7 +32,7 @@ class VerticaStorage(AbstractStorage):
         query = f'DROP TABLE {name};'
         self._execute_query(query)
 
-    def add(self, query: str, table: str, total: int, batch: int) -> int:
+    def add(self, query: str, table: str, total: int, batch: int) -> float:
         query = query % table + '(%s, %s, %s);'
         start = time()
         for data in self.generator.add_data(total, batch, query, table, only_values=True):
@@ -41,7 +41,7 @@ class VerticaStorage(AbstractStorage):
         end = time()
         return end - start
 
-    def read(self, query: str, table: str) -> int:
+    def read(self, query: str, table: str) -> float:
         query = query % table
         result = self._execute_query(query)
         return result

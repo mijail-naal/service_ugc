@@ -1,19 +1,21 @@
 from uuid import uuid4
 from random import randint
 
+from typing import Any
+
 
 class DataGenerator:
-    def generate_data(self, query: str, table: str, rows: int) -> int:
+    def generate_data(self, query: str, table: str, rows: int) -> str:
         query = query % table
         for _ in range(rows):
             query += f"('{str(uuid4())}', '{str(uuid4())}', {randint(100000000, 1000000000)}), "
         return query.rstrip(', ')
 
-    def generate_values(self, rows: int) -> int:
+    def generate_values(self, rows: int) -> list[tuple[str, str, int]]:
         data = [(str(uuid4()), str(uuid4()), randint(100000000, 1000000000)) for _ in range(rows)]
         return data
 
-    def add_data(self, total, size, query, table, only_values: bool = None):
+    def add_data(self, total: int, size: int, query: str, table: str, only_values: bool = False) -> Any:
         times = total // size + 1
         if total % size == 0:
             times = total // size

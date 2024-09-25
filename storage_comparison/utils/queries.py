@@ -29,4 +29,4 @@ ORDER BY id;
 
 INSERT = 'INSERT INTO %s (user_id, movie_id, viewed_frame) VALUES '
 
-SELECT = "SELECT count(*) FROM %s;"
+SELECT = 'SELECT count(*) FROM %s;'
