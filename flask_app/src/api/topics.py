@@ -7,8 +7,8 @@ from src.schemas.topic import CreateTopic
 def abort_if_topic_not_created(args):
     abort(
         400,
-        message=f"The topic '{args['name']}' was not created. "
-                "Check the log file for more information"
+        message=f'The topic "{args["name"]}" was not created. '
+        'Check the log file for more information'
     )
 
 
@@ -27,17 +27,22 @@ class Topic(Resource):
         self.kafka_service: KafkaService = kwargs['kafka_service']
 
     def post(self):
-        """
+        r"""Post method to create a Topic.
+
         Required arguments:
             name: string, name of topic.
+
         Default arguments:
             partition: integer, number of partitions.
             replication: integer, the replication factor determines the number
-                of copies of each partition in Kafka.
+            of copies of each partition in Kafka.
             min_replicas: integer, defines the minimum number of replicas that
-                must confirm the record.
+            must confirm the record.
             retention: integer, defines the period of time (in milliseconds)
-                during which the data will be stored on the server.
+            during which the data will be stored on the server.
+
+        Returns:
+            Response.
 
         Usage example with CURL:
             curl ^
@@ -46,7 +51,6 @@ class Topic(Resource):
             -d "{\"name\":\"<topic-name>\"}" ^
             -v
         """
-
         args = parser.parse_args()
         topic = CreateTopic(**args)
         created = self.kafka_service.create_topic(topic)

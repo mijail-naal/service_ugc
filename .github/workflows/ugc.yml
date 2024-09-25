@@ -34,7 +34,6 @@ jobs:
 
       - name: Lint with flake8
         run: |
-          # flake8 . --exit-zero --benchmark --format = pylint --output-file report.html 
           flake8 . --config=setup.cfg --exit-zero --benchmark
 
       - name: Lint with mypy
