@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask_restful import reqparse, abort, Resource
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -8,7 +10,7 @@ from src.schemas.like import LikeData, LikeCondition, LikeUpdate
 
 def abort_if_not_sent():
     abort(
-        400,
+        HTTPStatus.BAD_REQUEST,
         msg='The information was not sent. '
         'Check the log file for more information'
     )
@@ -52,8 +54,8 @@ class Like(Resource):
         like_doc = self.mongo_storage.get(collection, condition)
 
         if not like_doc:
-            abort(400, msg='No document found')
-        return like_doc[0]['like'], 200
+            abort(HTTPStatus.BAD_REQUEST, msg='No document found')
+        return like_doc[0]['like'], HTTPStatus.OK
 
     @jwt_required()
     def post(self):
@@ -66,7 +68,7 @@ class Like(Resource):
         like_sent = self.mongo_storage.insert(collection, condition, data)
         if not like_sent:
             abort_if_not_sent()
-        return 'Like sent to db', 200
+        return 'Like sent to db', HTTPStatus.OK
 
     @jwt_required()
     def put(self):
@@ -79,7 +81,7 @@ class Like(Resource):
         like_updated = self.mongo_storage.update(collection, condition, new_data)
         if not like_updated:
             abort_if_not_sent()
-        return 'Like updated', 200
+        return 'Like updated', HTTPStatus.OK
 
     @jwt_required()
     def delete(self):
@@ -91,4 +93,4 @@ class Like(Resource):
         like_delited = self.mongo_storage.delete(collection, condition)
         if not like_delited:
             abort_if_not_sent()
-        return 'Like deleted', 200
+        return 'Like deleted', HTTPStatus.OK
