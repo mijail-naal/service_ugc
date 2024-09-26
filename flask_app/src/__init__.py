@@ -1,8 +1,13 @@
 import os
+import logging
 
-from flask import Flask
+import logstash
+import sentry_sdk
+
+from flask import Flask, request
 from pymongo import MongoClient
 
+from .api.v1 import app_api, api
 from .api.v1.topics import Topic
 from .api.v1.messages import Message
 from .services.metric import KafkaService
@@ -11,17 +16,35 @@ from .api.v1.bookmarks import Bookmark
 from .api.v1.reviews import Review
 from .services.storage import MongoStorage
 from .core.config import settings
+from . import main
 
 
 def create_app(test_config=None):
     # Create and configure the app.
     basedir = os.path.abspath(os.path.dirname(__file__))
+    sentry_sdk.init(
+        dsn=settings.sentry_dsn,
+        traces_sample_rate=1.0,
+        profiles_sample_rate=1.0,
+    )
     app = Flask(__name__, instance_path=basedir + '/core')
     app.config.from_mapping(
         SECRET_KEY=settings.secret_key,
         JWT_SECRET_KEY=settings.jwt_secret_key,
         DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
+    logging.basicConfig(level=logging.INFO)
+    app.logger = logging.getLogger(__name__)
+    app.logger.setLevel(logging.INFO)
+    logstash_handler = logstash.LogstashHandler('logstash', 5044, version=1)
+
+    class RequestIdFilter(logging.Filter):
+        def filter(self, record: logging.LogRecord) -> bool:
+            record.request_id = request.headers.get('X-Request-Id')
+            return True
+
+    app.logger.addFilter(RequestIdFilter())
+    app.logger.addHandler(logstash_handler)
 
     if test_config is None:
         # Load the instance config, if it exists, when not testing.
@@ -41,14 +64,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from . import main
-    app.register_blueprint(main.bp)
-
     from flask_jwt_extended import JWTManager
+
     # Initialize a JWTManager with this flask application.
     jwt = JWTManager(app)
-
-    from .api.v1 import app_api, api
+    app.register_blueprint(main.bp)
     app.register_blueprint(app_api)
 
     kafka_service = KafkaService()
@@ -65,6 +85,15 @@ def create_app(test_config=None):
     @app.route('/working')
     def working():
         return 'Hello, Flask app is running!'
+
+    import random
+
+    @app.route('/')
+    def index():
+        result = random.randint(1, 50)
+        app.logger.info(f'Пользователю досталось число {result}')
+        return f"Ваше число {result}!"
+
     return app
 
 # RUN locally:
