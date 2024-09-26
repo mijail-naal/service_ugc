@@ -1,9 +1,9 @@
-# Проектная работа 8 спринта
+# Проектная работа 9 спринта
 
-### [UGC_Sprint_1](https://github.com/mijail-naal/ugc_sprint_1)
+### [UGC_Sprint_2](https://github.com/mijail-naal/ugc_sprint_2)
 
 
-[Приглашение](https://github.com/mijail-naal/ugc_sprint_1/invitations)
+[Приглашение](https://github.com/mijail-naal/ugc_sprint_2/invitations)
 
 
 <br>
@@ -13,7 +13,7 @@
 
 
 ### Развертывание
-#####  *ugc_sprint_1/docker-compose.yml*
+#####  *ugc_sprint_2/docker-compose.yml*
 
 ```Bash
 docker compose up --build -d
@@ -38,54 +38,37 @@ docker exec -it ugc sh -c "python3 -m pytest"
 docker start ugc_etl
 ```
 
+<br><br>
+
+
+## Пример сохранения данных в MongoDB
 <br>
 
+### Likes 
 
-### Пример сообщение в Kafka 
-
-| KEY              | VALUE               
-| ----------       |--------------------------
-| user_123         | CLICK - event description - created - start time - end time               
+| user_id          | film_id                                    | like
+| ----------       |-------------------------------------       |----------
+| user_123         | d9fb3d50-7415-4779-b780-824659acf34e       | true  
 |
 
-<br>
+### Bookmarks
 
+| user_id          | url                                  
+| ----------       |-------------------------------------------
+| user_123         |https://github.com/mijail-naal/ugc_sprint_1
+|
 
-### Пример сохранения данных в Clickhouse
+### Reviews
 
-| user_id     | action      | description         | event_time          | start_time    | end_time     
-|-------------|-------------|---------------------|---------------------|---------------|---------------
-| user_123    | CLICK       | event description   | 01/02/2024 08:40:00 | 08:46:00      | 09:47:00 
-| user_456    | VIEW        | event description   | 03/02/2024 12:00:00 | 16:34:36      | 16:52:27 
-| user_123    | VIEW        | event description   | 05/02/2024 06:30:00 | 06:35:00      | 09:47:00 
-|  
-
-
-<br>
-
-
-## Архитектура
-
-<br>
-
-
-![Diagram](architecture/diagram.png)
+| user_id     | film_id                              | created_at          | user_review         |
+|-------------|--------------------------------------|---------------------|---------------------|
+| user_123    | 410c62e1-5bab-4194-a042-304af966d228 | 01/02/2024 08:40:00 | Review from user    |
+|
 
 <br>
 
 
 ### Тестирование хранилищ
 
-[Clickhouse](https://github.com/mijail-naal/ugc_sprint_1/tree/main/storage_comparison)  [Vertica](https://github.com/mijail-naal/ugc_sprint_1/tree/main/storage_comparison) [PostgreSQL](https://github.com/mijail-naal/ugc_sprint_1/tree/main/storage_comparison)
+[MondoDB](https://github.com/mijail-naal/ugc_sprint_2/tree/main/storage_comparison) - [PostgreSQL](https://github.com/mijail-naal/ugc_sprint_2/tree/main/storage_comparison)  
 
-
-<br>
-
-
-# Проектная работа 8 спринта
-
-Проектные работы в этом модуле выполняются в командах по 3-4 человека. Процесс обучения аналогичен сервису, где вы изучали асинхронное программирование. Роли в команде и отправка работы на ревью не меняются.
-
-Распределение по командам подготовит команда сопровождения. Куратор поделится с вами списками в Пачке в канале #group_projects.
-
-Задания на спринт вы найдёте внутри тем.
