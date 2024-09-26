@@ -2,9 +2,10 @@ from kafka import KafkaAdminClient, KafkaProducer
 from kafka.admin import NewTopic
 from kafka.errors import NoBrokersAvailable, TopicAlreadyExistsError, \
     InvalidTopicError, KafkaTimeoutError, UnknownTopicOrPartitionError
+from flask import current_app
 
 from src.utils.abstract import BaseBrokerService
-from src.utils.logger import logger
+# from src.utils.logger import logger
 from src.core.config import settings
 from src.schemas.topic import CreateTopic
 from src.schemas.message import SendMessage
@@ -30,11 +31,11 @@ class KafkaService(BaseBrokerService):
         except (NoBrokersAvailable, TopicAlreadyExistsError, InvalidTopicError) as error:
             match error:
                 case NoBrokersAvailable():
-                    logger.info(f'No connection available. Exception: {type(error).__name__}')
+                    current_app.logger.info(f'No connection available. Exception: {type(error).__name__}')
                 case TopicAlreadyExistsError():
-                    logger.info(f'Topic already exists. Exception: {type(error).__name__}')
+                    current_app.logger.info(f'Topic already exists. Exception: {type(error).__name__}')
                 case InvalidTopicError():
-                    logger.info(f'Topic name is invalid. Exception: {type(error).__name__}')
+                    current_app.logger.info(f'Topic name is invalid. Exception: {type(error).__name__}')
             return False
 
     def send_message(self, message: SendMessage) -> bool:
@@ -53,7 +54,7 @@ class KafkaService(BaseBrokerService):
             producer.close()
             return True
         except (NoBrokersAvailable, KafkaTimeoutError, AssertionError) as error:
-            logger.info(f'Exception: {error}')
+            current_app.logger.info(f'Exception: {error}')
             return False
 
     def delete_topic(self, topic: str) -> bool:
@@ -67,9 +68,9 @@ class KafkaService(BaseBrokerService):
         except (NoBrokersAvailable, UnknownTopicOrPartitionError, InvalidTopicError) as error:
             match error:
                 case NoBrokersAvailable():
-                    logger.info(f'No connection available. Exception: {type(error).__name__}')
+                    current_app.logger.info(f'No connection available. Exception: {type(error).__name__}')
                 case UnknownTopicOrPartitionError():
-                    logger.info(f'No topic partition. Exception: {type(error).__name__}')
+                    current_app.logger.info(f'No topic partition. Exception: {type(error).__name__}')
                 case InvalidTopicError():
-                    logger.info(f'Topic name is invalid. Exception: {type(error).__name__}')
+                    current_app.logger.info(f'Topic name is invalid. Exception: {type(error).__name__}')
             return False
