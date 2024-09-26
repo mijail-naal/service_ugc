@@ -8,6 +8,13 @@ from flask_jwt_extended import create_access_token
 bp = Blueprint('main', __name__)
 
 
+@bp.before_request
+def before_request():
+    request_id = request.headers.get('X-Request-Id')
+    if not request_id:
+        raise RuntimeError('request id is required')
+
+
 @bp.route('/login', methods=["POST"])
 def login():
     r"""Endpoint for testing login and generate access token.
