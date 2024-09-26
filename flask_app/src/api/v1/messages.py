@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask_restful import reqparse, abort, Resource
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -8,7 +10,7 @@ from src.schemas.message import SendMessage
 
 def abort_if_message_not_sent(args):
     abort(
-        400,
+        HTTPStatus.BAD_REQUEST,
         msg=f'The message to topic "{args["topic"]}" was not sent. '
         'Check the log file for more information'
     )
@@ -52,4 +54,4 @@ class Message(Resource):
         message_sent = self.kafka_service.send_message(message)
         if not message_sent:
             abort_if_message_not_sent(args)
-        return f"Message {args['key']} sent", 200
+        return f"Message {args['key']} sent", HTTPStatus.OK

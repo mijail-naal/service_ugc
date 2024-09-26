@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask_restful import reqparse, abort, Resource
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
@@ -8,7 +10,7 @@ from src.schemas.bookmark import BookmarkData
 
 def abort_if_not_sent():
     abort(
-        400,
+        HTTPStatus.BAD_REQUEST,
         msg='The information was not sent. '
         'Check the log file for more information'
     )
@@ -48,8 +50,8 @@ class Bookmark(Resource):
         bookmarks = self.mongo_storage.get(collection, condition)
         all_bookmarks = [BookmarkData(**bookmark).model_dump_json() for bookmark in bookmarks]
         if not all_bookmarks:
-            abort(400, msg='No document found')
-        return all_bookmarks, 200
+            abort(HTTPStatus.BAD_REQUEST, msg='No document found')
+        return all_bookmarks, HTTPStatus.OK
 
     @jwt_required()
     def post(self):
@@ -61,7 +63,7 @@ class Bookmark(Resource):
         bookmark_sent = self.mongo_storage.insert(collection, condition, args)
         if not bookmark_sent:
             abort_if_not_sent()
-        return 'bookmark sent to db', 200
+        return 'bookmark sent to db', HTTPStatus.OK
 
     @jwt_required()
     def delete(self):
@@ -73,4 +75,4 @@ class Bookmark(Resource):
         bookmark_delited = self.mongo_storage.delete(collection, condition)
         if not bookmark_delited:
             abort_if_not_sent()
-        return 'Like deleted', 200
+        return 'Like deleted', HTTPStatus.OK

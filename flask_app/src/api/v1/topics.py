@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask_restful import reqparse, abort, Resource
 
 from src.services.metric import KafkaService
@@ -6,7 +8,7 @@ from src.schemas.topic import CreateTopic
 
 def abort_if_topic_not_created(args):
     abort(
-        400,
+        HTTPStatus.BAD_REQUEST,
         message=f'The topic "{args["name"]}" was not created. '
         'Check the log file for more information'
     )
@@ -56,7 +58,7 @@ class Topic(Resource):
         created = self.kafka_service.create_topic(topic)
         if not created:
             abort_if_topic_not_created(args)
-        return f"Topic '{args['name']}' was created", 201
+        return f"Topic '{args['name']}' was created", HTTPStatus.CREATED
 
     def delete(self):
         args = parser.parse_args()
