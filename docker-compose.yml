@@ -13,6 +13,8 @@ services:
       - 5000
     ports:
       - ${UGC_PORTS}
+    volumes:
+      - ugc_elk:opt/app
     networks:
       - ugc_service_network
 
@@ -100,10 +102,12 @@ services:
       - ugc_service_network
 
   filebeat:
-    image: elastic/filebeat:8.12.1
+    # image: elastic/filebeat:8.12.1
+    build: 
+      context: ./filebeat
     volumes:
       - /tmp/logs/nginx:/var/log/nginx:ro
-      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
     depends_on:
       - ugc
       - nginx
@@ -113,9 +117,11 @@ services:
     links:
       - logstash
     # command: chmod go-w /usr/share/filebeat/filebeat.yml
+    command: filebeat -e -strict.perms=false
     networks:
       - ugc_service_network
 
 
 volumes:
   elastic_elk:
+  ugc_elk:

@@ -1,0 +1,28 @@
+logging.metrics.enabled: false
+xpack.security.enabled: false
+xpack.monitoring.enabled: false
+setup.ilm.enabled: false
+setup.template.enabled: false
+
+filebeat.inputs:
+- type: filestream
+  enabled: true
+  paths:
+    - /var/log/nginx/*
+  tags: ["nginx"]
+  json:
+    keys_under_root: true
+    add_error_key: true
+
+- type: filestream
+  enabled: true
+  paths:
+    - /var/log/ugc/*
+  tags: ["ugc"]
+  json:
+    keys_under_root: true
+    add_error_key: true
+
+output.logstash:
+  enabled: true
+  hosts: ["logstash:5045"]
