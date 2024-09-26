@@ -40,13 +40,13 @@ jobs:
         run: |
           mypy .
 
-      # - name: Send Telegram Notification on Push Pull request
-      #   uses: "appleboy/telegram-action@master"
-      #   with:
-      #     token: ${{ secrets.TELEGRAM_TOKEN }}
-      #     to: ${{ secrets.TELEGRAM_CHAT_ID }}
-      #     message: |
-      #       New commit by ${{ github.actor }}!
-      #       Commit: ${{ github.event.head_commit.message }}
-      #       Repository: ${{ github.repository }}
-      #       View changes: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+      - name: Send Telegram Notification on Push Pull request
+        uses: "appleboy/telegram-action@master"
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          message: |
+            New commit by ${{ github.actor }}!
+            Commit: ${{ github.event.head_commit.message }}
+            Repository: ${{ github.repository }}
+            View changes: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
