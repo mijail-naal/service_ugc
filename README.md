@@ -76,7 +76,7 @@ $ sudo docker compose up --build -d
 ```
 
 ### 3. Run ETL (Kafka to Clickhouse)
-#####  *После успешного запуска сервисов Kafka и Clickhouse*
+#####  *After successful start of Kafka and Clickhouse services*
 
 ```Bash
 docker start ugc_etl
