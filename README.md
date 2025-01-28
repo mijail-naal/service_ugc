@@ -104,7 +104,6 @@ docker exec -it ugc sh -c "python3 -m pytest"
 | KEY              | VALUE               
 | ----------       |--------------------------
 | user_123         | CLICK - event description - created - start time - end time               
-|
 
 <br>
 
@@ -115,9 +114,7 @@ docker exec -it ugc sh -c "python3 -m pytest"
 |-------------|-------------|---------------------|---------------------|---------------|---------------
 | user_123    | CLICK       | event description   | 01/02/2024 08:40:00 | 08:46:00      | 09:47:00 
 | user_456    | VIEW        | event description   | 03/02/2024 12:00:00 | 16:34:36      | 16:52:27 
-| user_123    | VIEW        | event description   | 05/02/2024 06:30:00 | 06:35:00      | 09:47:00 
-|  
-
+| user_123    | VIEW        | event description   | 05/02/2024 06:30:00 | 06:35:00      | 09:47:00   
 
 <br>
 
@@ -129,7 +126,7 @@ docker exec -it ugc sh -c "python3 -m pytest"
 | user_id          | film_id                                    | like
 | ----------       |-------------------------------------       |----------
 | user_123         | d9fb3d50-7415-4779-b780-824659acf34e       | true  
-|
+
 
 ### Bookmarks
 
@@ -137,11 +134,11 @@ docker exec -it ugc sh -c "python3 -m pytest"
 | ----------       |-------------------------------------------
 | user_123         |https://github.com/mijail-naal/ugc_sprint_1
 | user_123         |https://github.com/mijail-naal/ugc_sprint_2
-|
+
 
 ### Reviews
 
 | user_id     | film_id                              | created_at          | user_review         |
 |-------------|--------------------------------------|---------------------|---------------------|
 | user_123    | 410c62e1-5bab-4194-a042-304af966d228 | 01/02/2024 08:40:00 | Review from user    |
-|
+
